@@ -7,7 +7,7 @@ async function login(event) {
             email: email,
             password: password
         }
-        const response = await axios.post('http://54.163.199.108/:3000/users/login', user);
+        const response = await axios.post('http://54.163.199.108:3000/users/login', user);
         console.log('Login Successfully');
         
         if(response.data.success==true){

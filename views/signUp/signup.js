@@ -13,7 +13,7 @@ try {
         password: password
     }
     //console.log(newUser);
-    const response = await axios.post('http://54.163.199.108/:3000/users/signup',newUser);
+    const response = await axios.post('http://54.163.199.108:3000/users/signup',newUser);
     if(response.data.success === true) {
         let errorDiv = document.getElementById('error-message');
         let errorMessage = document.createElement('div');
