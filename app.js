@@ -31,7 +31,12 @@ app.use('/users',userRoutes);
 app.use('/expense',expenseRoutes);
 app.use('/purchase', premiumRoutes);
 app.use('/premium', premiumFeatureRoute);
-app.use('/password', passwordRoutes)
+app.use('/password', passwordRoutes);
+
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, `views/${req.url}`))
+})
+
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
