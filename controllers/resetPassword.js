@@ -39,7 +39,7 @@ exports.forgotPassword = async (req, res, next) => {
                         to: receivers,
                         subject: 'Reset Password',
                         htmlContent: `<h2>Reset Password</h2>
-                        <p> <a href='http://localhost:3000/password/resetpassword/${id}'>Click Here</a> to reset password</p>`,
+                        <p> <a href='http://54.163.199.108/:3000/password/resetpassword/${id}'>Click Here</a> to reset password</p>`,
                     })
                     .then((result) => {
                         console.log('Sent>>>>', result);
@@ -71,7 +71,7 @@ exports.resetPassword = async (req, res, next) => {
            forgotPassReq.update({ isactive: false });
             res.status(200).send(`
                 <html> 
-                    <form id="resetPasswordForm" action="http://localhost:3000/password/updatepassword/${id}" method="POST">
+                    <form id="resetPasswordForm" action="http://54.163.199.108/:3000/password/updatepassword/${id}" method="POST">
                         <label for="newPassword">New Password</label>
                         <input name="newPassword" id="newPassword" type="password" required autocomplete="new-password">
                         <button type="submit">Reset Password</button>
@@ -83,7 +83,7 @@ exports.resetPassword = async (req, res, next) => {
                             const newPassword = document.getElementById('newPassword').value;
                             const id = "${id}"; // Use "${id}" for plain HTML templates
                             try {
-                                const response = await axios.post(\`http://localhost:3000/password/updatepassword/\${id}\`, { newPassword });
+                                const response = await axios.post(\`http://54.163.199.108/:3000/password/updatepassword/\${id}\`, { newPassword });
                                 console.log(newPassword);
                                 console.log(response.data);
                                 alert(response.data.message);
