@@ -34,10 +34,11 @@ app.use('/premium', premiumFeatureRoute);
 app.use('/password', passwordRoutes);
 
 
-app.use((req, res) => {
-    console.log('url>>', req.url)
-    res.sendFile(path.join(__dirname, `views/${req.url}`))
-})
+app.use(express.static(path.join(__dirname, 'views')));
+// app.use((req, res) => {
+//     console.log('url>>', req.url)
+//     res.sendFile(path.join(__dirname, `views/${req.url}`))
+// })
 
 
 User.hasMany(Expense);
