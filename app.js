@@ -33,9 +33,9 @@ app.use('/purchase', premiumRoutes);
 app.use('/premium', premiumFeatureRoute);
 app.use('/password', passwordRoutes);
 
-app.use(express.static('views'));
+
 app.use((req, res) => {
-    res.sendFile(path.join(__dirname, `views/${req.url}`))
+    res.sendFile(path.join(__dirname, `views/logIn/login.html`))
 })
 
 
