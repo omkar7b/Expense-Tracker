@@ -72,7 +72,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('#expenseperpage').value = localStorage.getItem('expPerPage');
         const page=1;
         const pagesize = localStorage.getItem('expPerPage');
-        const response = await axios.get(`http://54.163.199.108:3000/expense/get-expense?pagesize=${pagesize}&page=${page}`, {headers: {"Authorization" : token} });
+        const response = await axios.get(`http://54.163.199.108:3000/expense/get-expense?pagesize=10&page=1`, {headers: {"Authorization" : token} });
             const expenses = response.data.expenses;
             expenses.forEach(expense => {
                 showExpenseInTable(expense);

@@ -35,7 +35,8 @@ app.use('/password', passwordRoutes);
 
 
 app.use((req, res) => {
-    res.sendFile(path.join(__dirname, `views/logIn/login.html`))
+    console.log('url>>', req.url)
+    res.sendFile(path.join(__dirname, `views/${req.url}`))
 })
 
 
