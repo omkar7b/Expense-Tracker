@@ -1,7 +1,5 @@
-const DownloadedFiles = require('../models/downloadedFiles.js');
 const Expense = require('../models/expense.js');
 const sequelize = require('../util/database.js');
-const AWS = require('aws-sdk');
 require('dotenv').config();
 
 
@@ -33,31 +31,29 @@ function uploadToS3(data, filename){
     })
 }
 
-exports.downloadExpense = async (req,res, next) => {
-    try {
-    const expenses = await req.user.getExpenses();
-    const stringifiedExpenses = JSON.stringify(expenses);
-    //console.log('...',stringifiedExpenses);
-    const userId = req.user.id;
+// exports.downloadExpense = async (req,res, next) => {
+//     try {
+//         if(!req.user.ispremiumuser){
+//             return res.status(401).json({message: 'Buy Premium to Download Report', success:false})
+//         }
+//     const expenses = await req.user.getExpenses();
+//     const stringifiedExpenses = JSON.stringify(expenses);
+//     //console.log('...',stringifiedExpenses);
+//     const userId = req.user.id;
 
-    const filename = `Expense${userId}/${new Date()}.txt`; // need according to user, depend upon username who is downloading it.
-    const fileURL = await uploadToS3(stringifiedExpenses, filename);
-    const downloadedFile = DownloadedFiles.create({
-        fileURL: fileURL,
-        date: sequelize.literal('CURDATE()'),
-        userId: req.user.id, // Make sure to include the userId if it's not automatically set
-    });
-    res.status(200).json({fileURL, success: true});
-    } catch(error) {
-        res.status(500).json({fileURL:'', success: false, error: error})
-        console.log(error);
-    }
-}
-
-exports.recentlyDownloadedFiles = async (req,res, next) => {
-    const recentdownloadedfiles = await DownloadedFiles.findAll({where: {userId: req.user.id}});
-    res.status(200).json(recentdownloadedfiles);
-}
+//     const filename = `Expense${userId}/${new Date()}.txt`; // need according to user, depend upon username who is downloading it.
+//     const fileURL = await uploadToS3(stringifiedExpenses, filename);
+//     const downloadedFile = DownloadedFiles.create({
+//         fileURL: fileURL,
+//         date: sequelize.literal('CURDATE()'),
+//         userId: req.user.id, // Make sure to include the userId if it's not automatically set
+//     });
+//     res.status(200).json({fileURL, success: true});
+//     } catch(error) {
+//         res.status(500).json({fileURL:'', success: false, error: error})
+//         console.log(error);
+//     }
+// }
 
 exports.addExpense = async (req, res, next) => {
     try {

@@ -65,6 +65,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         if(isPremiumUser){
             showPremiumUser();  //premium feature
             showLeaderboard();  //premium feature
+            recentdownload();
+        
         }
         else {
             document.getElementById('rzp-button').style.display = 'block';
@@ -79,7 +81,6 @@ window.addEventListener('DOMContentLoaded', async () => {
                 //showExpenseOnScreen(expense);
             });
             showPagination(response.data.nextPage, response.data.previousPage, response.data.currentPage, response.data.hasPreviousPage, response.data.hasNextPage, response.data.lastPage);
-            recentdownload();
     } catch (error) {
         console.log('Error while fetching data', error);
     }
@@ -188,6 +189,7 @@ document.getElementById('rzp-button').onclick = async (e) => {
             localStorage.setItem('token', result.data.token);
             showPremiumUser();
             showLeaderboard(); 
+            download();
         }
     };
 
@@ -296,41 +298,44 @@ function showExpenseInTable(expense) {
     document.getElementById('tbody').appendChild(tr);
 }
 
-
-function download() {
-    const token = localStorage.getItem('token');
-    axios.get('http://54.163.199.108:3000/expense/download', { headers: { "Authorization": token } })
-    .then(response => {
-        //backend is essentially sending a download link
-        //which if we open in brwoser, file would download
+async function download() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://54.163.199.108:3000/premium/download', { headers: { "Authorization": token } })
         if(response.status === 200) {
-        var a = document.createElement("a");
-        a.href = response.data.fileURL;
-        a.download = 'myexpense.csv';
-        a.click();
-        console.log(response);
+                var a = document.createElement("a");
+                a.href = response.data.fileURL;
+                a.download = 'myexpense.csv';
+                a.click();
+                //console.log("Non-premium user. Download not allowed."); 
         } else {
             throw new Error(response.data.message);
-        }
-    })
-    .catch(err => {
-        console.log(err);
-    })
+        }  
+    }
+    catch(err) {
+        const serverMessage = err.response.data.message;
+
+    // Display the message on your webpage if needed
+    document.getElementById("messageContainer").innerHTML = `<h4>${serverMessage}</h4>`;
+    } 
 }
 
-function recentdownload() {
-    const token = localStorage.getItem('token');
-    axios.get('http://54.163.199.108:3000/expense/recentdownload', { headers: { "Authorization": token }})
-    .then((response) => {
+
+
+async function recentdownload() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://54.163.199.108:3000/premium/recentdownload', { headers: { "Authorization": token }})
         let recentdownloads = document.getElementById('recentdownloads');
         response.data.forEach((data) => {
-            let file = document.createElement('li');
-            file.innerHTML =  `<a style="color:red"href="${data.fileURL}">Downloaded On ${data.date}</a>`;
-            recentdownloads.appendChild(file);
-            console.log(data.fileURL)
+        let file = document.createElement('li');
+        file.innerHTML =  `<a style="color:red"href="${data.fileURL}">Downloaded On ${data.date}</a>`;
+        recentdownloads.appendChild(file);
+        console.log(data.fileURL);
         })
-    })
-    .catch(err => console.log(err));
+    } catch (err){
+        console.log(err);
+    }
 }
 
 document.querySelector('#expenseperpage').addEventListener('change', () => {
@@ -338,3 +343,4 @@ document.querySelector('#expenseperpage').addEventListener('change', () => {
     localStorage.setItem('expPerPage', document.querySelector('#expenseperpage').value);
     location.reload();
 })
+
